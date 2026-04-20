@@ -6,22 +6,47 @@ A super simple FastAPI application that allows students to view and sign up for 
 
 - View all available extracurricular activities
 - Sign up for activities
+- Persistent data storage with MySQL database
+- User authentication and profiles (planned)
+- Admin dashboard and management (planned)
 
 ## Getting Started
 
-1. Install the dependencies:
+### Prerequisites
+
+- Python 3.8+
+- MySQL Server
+- Git
+
+### Installation
+
+1. Clone the repository and navigate to the project directory:
+
+2. Install the dependencies:
 
    ```
-   pip install fastapi uvicorn
+   pip install -r requirements.txt
    ```
 
-2. Run the application:
+3. Set up the database:
+
+   **Option A: Automatic Setup**
+   ```bash
+   python setup_database.py
+   ```
+
+   **Option B: Manual Setup**
+   - Create a MySQL database named `school_activities`
+   - Update `.env` file with your database credentials if needed
+   - The application will automatically create tables on first run
+
+4. Run the application:
 
    ```
-   python app.py
+   python src/app.py
    ```
 
-3. Open your browser and go to:
+5. Open your browser and go to:
    - API documentation: http://localhost:8000/docs
    - Alternative documentation: http://localhost:8000/redoc
 
@@ -31,20 +56,29 @@ A super simple FastAPI application that allows students to view and sign up for 
 | ------ | ----------------------------------------------------------------- | ------------------------------------------------------------------- |
 | GET    | `/activities`                                                     | Get all activities with their details and current participant count |
 | POST   | `/activities/{activity_name}/signup?email=student@mergington.edu` | Sign up for an activity                                             |
+| DELETE | `/activities/{activity_name}/unregister?email=student@mergington.edu` | Unregister from an activity                                         |
 
 ## Data Model
 
-The application uses a simple data model with meaningful identifiers:
+The application uses a MySQL database with the following tables:
 
-1. **Activities** - Uses activity name as identifier:
-
+1. **Activities** - Activity information:
+   - Name (unique identifier)
    - Description
+   - Category (Academic, Sports, Arts)
    - Schedule
    - Maximum number of participants allowed
-   - List of student emails who are signed up
+   - Contact email
+   - Event date and times (planned)
 
-2. **Students** - Uses email as identifier:
+2. **Users** - User accounts (planned):
+   - Email (unique identifier)
    - Name
-   - Grade level
+   - Password (hashed)
+   - Role (student/admin)
 
-All data is stored in memory, which means data will be reset when the server restarts.
+3. **Registrations** - Activity signups:
+   - Links users to activities
+   - Registration timestamp
+
+All data is now stored persistently in MySQL, so it survives server restarts.
